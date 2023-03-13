@@ -1,0 +1,19 @@
+- name: create a service account
+  kubernetes.core.k8s:
+    state: present
+    api_key: "{{ api_key }}"
+    apply: true
+    validate_certs: false
+    resource_definition: "{{ lookup('template', './templates/sa.yaml.j2') | from_yaml }}"
+
+- name: create token
+  kubernetes.core.k8s:
+    state: present
+    api_key: "{{ api_key }}"
+    apply: true
+    validate_certs: false
+    resource_definition: "{{ lookup('template', './templates/satoken.yaml.j2') | from_yaml }}"
+
+- name: grant service account permissions to query cluster monitoring prometheus server
+  shell: oc adm policy add-cluster-role-to-user cluster-monitoring-view -z {{ grafana.serviceAccount }} -n {{ operatorNamespace }}
+  

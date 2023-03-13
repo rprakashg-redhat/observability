@@ -1,0 +1,27 @@
+- name: create operator group
+  kubernetes.core.k8s:
+    state: present
+    api_key: "{{ api_key }}"
+    apply: true
+    validate_certs: false
+    resource_definition: "{{ lookup('template', './templates/operatorgroup.yaml.j2') | from_yaml }}"
+
+- name: install grafana operator
+  kubernetes.core.k8s:
+    state: present
+    api_key: "{{ api_key }}"
+    apply: true
+    validate_certs: false
+    resource_definition: "{{ lookup('template', './templates/subscription.yaml.j2') | from_yaml }}"
+
+- name: wait for operator to be ready
+  kubernetes.core.k8s_info:
+    api_key: "{{ api_key }}"
+    kind: ClusterServiceVersion
+    name: "grafana-operator.v4.9.0"
+    api_version: operators.coreos.com/v1alpha1
+    namespace: "{{ operatorNamespace }}"
+  register: __grafana_operator_install_result
+  until: "(__grafana_operator_install_result['resources'][0]['status']['phase'] is defined) and (__grafana_operator_install_result['resources'][0]['status']['phase'] == 'Succeeded')"
+  retries: 15
+  delay: 15
