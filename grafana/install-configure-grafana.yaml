@@ -29,14 +29,17 @@
         - yaml
   
   - name: create the namespace to install grafana operator
-    include_tasks: ./tasks/create-namespace.yaml
+    include_tasks: ./tasks/createNamespace.yaml
   
   - name: install the grafana operator
-    include_tasks: ./tasks/install-operator.yaml
-
-  - name: create a grafana instance
-    include_tasks: ./tasks/create-grafana.yaml
+    include_tasks: ./tasks/installOperator.yaml
 
   - name: create and configure a service account to query cluster monitoring prometheus
-    include_tasks: ./tasks/create-thanos-sa.yaml
-    
+    include_tasks: ./tasks/configureServiceAccount.yaml
+
+  - name: create a grafana instance
+    include_tasks: ./tasks/createGrafana.yaml
+      
+  - name: add cluster monitoring prometheus server as grafana datasource for dashboards
+    include_tasks: ./tasks/addDatasource.yaml
+

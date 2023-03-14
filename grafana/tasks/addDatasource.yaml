@@ -1,0 +1,7 @@
+- name: add cluster prometheus server as grafana datasource
+  kubernetes.core.k8s:
+    state: present
+    api_key: "{{ api_key }}"
+    apply: true
+    validate_certs: false
+    resource_definition: "{{ lookup('template', './templates/datasource.yaml.j2') | from_yaml }}"

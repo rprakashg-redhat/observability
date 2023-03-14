@@ -4,5 +4,5 @@
     api_key: "{{ api_key }}"
     apply: true
     validate_certs: false
-    resource_definition: "{{ lookup('template', './templates/sa.yaml.j2') | from_yaml }}"
+    resource_definition: "{{ lookup('template', './templates/grafana.yaml.j2') | from_yaml }}"
 

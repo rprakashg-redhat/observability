@@ -7,6 +7,7 @@ grafana:
   instanceName: demo-grafana
   serviceAccount: demo-grafana-thanos
   serviceAccountTokenSecret: grafana-thanos-token
+  datsourceName: prometheus-grafanadatasource
   service:
     name: grafana-service
     labels:
