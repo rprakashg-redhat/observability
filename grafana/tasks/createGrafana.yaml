@@ -6,3 +6,15 @@
     validate_certs: false
     resource_definition: "{{ lookup('template', './templates/grafana.yaml.j2') | from_yaml }}"
 
+- name: wait for grafana instance
+  kubernetes.core.k8s_info:
+    api_key: "{{ api_key }}"
+    kind: Grafana
+    name: 'demo-grafana'
+    api_version: integreatly.org/v1alpha1
+    namespace: '{{ operatorNamespace }}' 
+  register: __grafana_install_result
+  until: "(__grafana_install_result['resources'][0]['status']['message'] is defined) and (__grafana_install_result['resources'][0]['status']['message'] == 'success')"
+  retries: 50
+  delay: 20
+
